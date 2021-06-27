@@ -8,8 +8,6 @@ use Illuminate\Support\Str;
 
 trait UuidsAsPrimaryKeysTrait
 {
-    public $incrementing = false;
-
     public function getIncrementing()
     {
         return false;
