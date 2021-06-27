@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Shopware6Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('v1')->name('api.v1.')->group(static function (): void {
+    Route::view('shopware6/manifest.xml', 'integration.shopware-6.manifest-xml')->name('shopware6.manifest');
+
+    Route::get('shopware6/register', [Shopware6Controller::class, 'register'])->name('shopware6.register');
+    Route::post('shopware6/confirm', [Shopware6Controller::class, 'confirm'])->name('shopware6.confirm');
 });
