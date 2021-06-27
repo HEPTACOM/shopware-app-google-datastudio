@@ -24,4 +24,5 @@ Route::prefix('v1')->name('api.v1.')->group(static function (): void {
 
     Route::get('shopware6/register', [Shopware6Controller::class, 'register'])->name('shopware6.register');
     Route::post('shopware6/confirm/{internalId}', [Shopware6Controller::class, 'confirm'])->name('shopware6.confirm');
+    Route::get('shopware6/order/{shop}', [Shopware6Controller::class, 'order'])->name('shopware6.order');
 });

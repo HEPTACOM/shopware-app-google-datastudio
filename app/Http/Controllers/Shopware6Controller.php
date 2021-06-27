@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shopware6\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as BaseResponse;
@@ -75,5 +76,54 @@ class Shopware6Controller extends Controller
     protected function getAppSecret(): string
     {
         return (string) \config('heptaconnect-shopware-six.app_secret', 'mysecret');
+    }
+
+    public function order(Shop $shop,Request $request): BaseResponse
+    {
+        $shopAttributes = $shop->getAttributes();
+        $apiKey = $shopAttributes['api_key'] ?? null;
+        $secretKey = $shopAttributes['secret_key'] ?? null;
+        $shopUrl = $shopAttributes['shop_url'] ?? null;
+
+        $response = Http::post($shopUrl . '/api/oauth/token', [
+            'client_id' => $apiKey,
+            'client_secret' => $secretKey,
+            'grant_type' => 'client_credentials'
+        ]);
+
+        if ($response->status() === 200) {
+            $responseBody = $response->json();
+            $accessToken = $responseBody['access_token'] ?? null;
+
+            if ($accessToken) {
+                $orderResponse = Http::withHeaders([
+                    'authorization' => 'Bearer ' . $accessToken,
+                    'accept'=> 'application/vnd.api+json'
+
+                ])->post($shopUrl . '/api/search/order', [
+                    'limit'=> 2,
+                    'page'=> 1,
+                    'total-count-mode'=> 1,
+                ]);
+
+                $orderData = $orderResponse->json();
+
+                sleep(0);
+                $orderResult = [
+                    'shippingCosts' => 0.0,
+
+                ];
+
+                return Response::json([
+                    $orderResponse->body()
+                ]);
+            }
+        }
+
+
+
+        return Response::json([
+            'statusCode' => $response->json()
+        ]);
     }
 }
