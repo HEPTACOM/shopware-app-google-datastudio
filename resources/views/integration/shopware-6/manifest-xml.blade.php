@@ -6,6 +6,7 @@
     <meta>
         <name>{{ config('heptaconnect-shopware-six.app_name') }}</name>
         <label>HEPTAconnect.cloud</label>
+        <label lang="de-DE">HEPTAconnect.cloud</label>
         <description>A description</description>
         <description lang="de-DE">Eine Beschreibung</description>
         <author>HEPTACOM GmbH</author>
@@ -19,4 +20,14 @@
     <permissions>
         <read>order</read>
     </permissions>
+    <admin>
+        <module
+            source="{{ route('api.v1.shopware6.wizard') }}"
+            name="setup-wizard"
+        >
+            <label>Setup</label>
+            <label lang="de-DE">Einrichtung</label>
+        </module>
+        <main-module source="{{ route('api.v1.shopware6.wizard') }}"/>
+    </admin>
 </manifest>
