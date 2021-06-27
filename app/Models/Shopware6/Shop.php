@@ -3,6 +3,7 @@
 namespace App\Models\Shopware6;
 
 use App\Models\UuidsAsPrimaryKeysTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string      $shop_secret
  * @property string|null $api_key
  * @property string|null $secret_key
+ * @method static Builder where(string $key, $value)
  */
 class Shop extends Model
 {
