@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/app-system/0.2.0/src/Core/Content/App/Manifest/Schema/manifest-1.0.xsd"
 >
     <meta>
-        <name>HeptacomHeptaconnectCloud</name>
+        <name>{{ config('heptaconnect-shopware-six.app_name') }}</name>
         <label>HEPTAconnect.cloud</label>
         <description>A description</description>
         <description lang="de-DE">Eine Beschreibung</description>

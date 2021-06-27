@@ -36,7 +36,7 @@ class Shopware6Controller extends Controller
 
     protected function getAppName(): string
     {
-        return (string) \config('heptaconnect-shopware-six.app_name', 'HeptacomHeptaconnectCloud');
+        return (string) \config('heptaconnect-shopware-six.app_name', 'HeptacomHeptaconnectCloudDataAnalysis');
     }
 
     protected function getAppSecret(): string
