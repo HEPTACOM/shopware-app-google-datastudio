@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2fa6a38d973ca86815c82f7478f7cd57",
+    "content-hash": "2aa0d30d523ccfa43d37fe0da924cbb1",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -57,6 +57,48 @@
                 "stack"
             ],
             "time": "2021-03-11T06:42:03+00:00"
+        },
+        {
+            "name": "bentools/iterable-functions",
+            "version": "1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bpolaszek/php-iterable-functions.git",
+                "reference": "82996c6c0e794edf212cde4bb5aff0e1a2b8498d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bpolaszek/php-iterable-functions/zipball/82996c6c0e794edf212cde4bb5aff0e1a2b8498d",
+                "reference": "82996c6c0e794edf212cde4bb5aff0e1a2b8498d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0|^5.0|^6.0|^7.0",
+                "squizlabs/php_codesniffer": "^2.0|^3.4",
+                "symfony/var-dumper": "@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BenTools\\IterableFunctions\\": "src"
+                },
+                "files": [
+                    "src/iterable-functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Provides functions for iterable variables: is_iterable(), iterable_to_array()",
+            "support": {
+                "issues": "https://github.com/bpolaszek/php-iterable-functions/issues",
+                "source": "https://github.com/bpolaszek/php-iterable-functions/tree/1.4"
+            },
+            "time": "2020-05-01T07:48:02+00:00"
         },
         {
             "name": "brick/math",
@@ -4478,6 +4520,56 @@
             "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
             "time": "2020-07-13T06:12:54+00:00"
+        },
+        {
+            "name": "vin-sw/shopware-sdk",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vienthuong/shopware-php-sdk.git",
+                "reference": "cc4032e5d5f3fa5f3e8f78cd685fab8b404a471c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vienthuong/shopware-php-sdk/zipball/cc4032e5d5f3fa5f3e8f78cd685fab8b404a471c",
+                "reference": "cc4032e5d5f3fa5f3e8f78cd685fab8b404a471c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^7.0",
+                "php": "^7.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.89",
+                "phpunit/phpunit": "*",
+                "squizlabs/php_codesniffer": "3.*",
+                "symfony/var-dumper": "^5.3",
+                "symplify/config-transformer": "^9.3",
+                "symplify/easy-coding-standard": "9.3.20"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vin\\ShopwareSdk\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "vin",
+                    "email": "levienthuong@gmail.com"
+                }
+            ],
+            "description": "A PHP SDK for Shopware 6 Platform",
+            "support": {
+                "issues": "https://github.com/vienthuong/shopware-php-sdk/issues",
+                "source": "https://github.com/vienthuong/shopware-php-sdk/tree/1.0.0"
+            },
+            "time": "2021-06-23T09:36:16+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

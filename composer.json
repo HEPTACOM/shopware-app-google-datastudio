@@ -6,12 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
+        "ext-json": "*",
+        "bentools/iterable-functions": "^1.4",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "graham-campbell/markdown": "^13.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.40",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "vin-sw/shopware-sdk": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
