@@ -98,10 +98,9 @@ class Shopware6Controller extends Controller
 
     public function order(Shop $shop,Request $request): BaseResponse
     {
-        $shopAttributes = $shop->getAttributes();
-        $apiKey = $shopAttributes['api_key'] ?? null;
-        $secretKey = $shopAttributes['secret_key'] ?? null;
-        $shopUrl = $shopAttributes['shop_url'] ?? null;
+        $apiKey = $shop->api_key;
+        $secretKey = $shop->secret_key;
+        $shopUrl = $shop->shop_url;
 
         $response = Http::post($shopUrl . '/api/oauth/token', [
             'client_id' => $apiKey,
