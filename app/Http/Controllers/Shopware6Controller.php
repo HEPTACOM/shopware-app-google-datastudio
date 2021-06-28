@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\EntityRepository;
 use App\Models\Shopware6\Shop;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as BaseResponse;
+use Vin\ShopwareSdk\Client\AdminAuthenticator;
+use Vin\ShopwareSdk\Client\GrantType\ClientCredentialsGrantType;
+use Vin\ShopwareSdk\Data\Context;
+use Vin\ShopwareSdk\Data\Criteria;
+use Vin\ShopwareSdk\Data\Entity\Order\OrderDefinition;
+use Vin\ShopwareSdk\Data\Filter\RangeFilter;
+use Vin\ShopwareSdk\Factory\RepositoryFactory;
+use Vin\ShopwareSdk\Repository\EntityRepository as BaseEntityRepository;
 
 class Shopware6Controller extends Controller
 {
@@ -102,45 +110,69 @@ class Shopware6Controller extends Controller
         $secretKey = $shop->secret_key;
         $shopUrl = $shop->shop_url;
 
-        $response = Http::post($shopUrl . '/api/oauth/token', [
-            'client_id' => $apiKey,
-            'client_secret' => $secretKey,
-            'grant_type' => 'client_credentials'
-        ]);
+        $startDate = $request->get('startDate');
+        $endDate = $request->get('endDate');
 
-        if ($response->status() === 200) {
-            $responseBody = $response->json();
-            $accessToken = $responseBody['access_token'] ?? null;
+        $grantType = new ClientCredentialsGrantType($apiKey, $secretKey);
 
-            if ($accessToken) {
-                $orderResponse = Http::withHeaders([
-                    'authorization' => 'Bearer ' . $accessToken,
-                    'accept'=> 'application/vnd.api+json'
+        $adminClient = new AdminAuthenticator($grantType, $shopUrl);
+        $accessToken = $adminClient->fetchAccessToken();
+        $context = new Context($shopUrl, $accessToken);
 
-                ])->post($shopUrl . '/api/search/order', [
-                    'limit'=> 2,
-                    'page'=> 1,
-                    'total-count-mode'=> 1,
-                ]);
+        return Response::json(
+            iterable_to_array($this->getOrders($startDate, $endDate, $context))
+        );
+    }
 
-                $orderData = $orderResponse->json();
+    protected function getOrders($startDate, $endDate, Context $context): iterable
+    {
+        /** @var BaseEntityRepository $repository */
+        $repository = RepositoryFactory::create(OrderDefinition::ENTITY_NAME);
+        $orderRepository = new EntityRepository($repository);
 
-                sleep(0);
-                $orderResult = [
-                    'shippingCosts' => 0.0,
+        $criteria = (new Criteria())
+            ->addFilter(new RangeFilter('orderDate', [
+                RangeFilter::GTE => $startDate,
+                RangeFilter::LTE => $endDate,
+            ]))
+            ->addAssociations([
+                'billingAddress.country',
+                'deliveries.shippingOrderAddress.country',
+                'salesChannel',
+                'language',
+                'transactions.paymentMethod',
+                'orderCustomer.customer.group',
+            ])
+        ;
 
-                ];
+        $criteria->setPage(0);
+        $criteria->setLimit(0);
 
-                return Response::json([
-                    $orderResponse->body()
-                ]);
-            }
+        $orders = $orderRepository->search($criteria, $context)->getData();
+
+        /** @var array $order */
+        foreach ($orders as $order) {
+            yield [
+                'shippingCostsNet' => $order['shippingCosts']['totalPrice'], // TODO: tax
+                'shippingCostsGross' => $order['shippingCosts']['totalPrice'], // TODO: tax
+                'shippingCity' => $order['deliveries'][0]['shippingOrderAddress']['city'],
+                'shippingCountry' => $order['deliveries'][0]['shippingOrderAddress']['country']['iso'],
+                'billingCity' => $order['billingAddress']['city'],
+                'billingCountry' => $order['billingAddress']['country']['iso'],
+                'customerNumber' => $order['orderCustomer']['customerNumber'],
+                'customerAffiliate' => $order['orderCustomer']['customer']['affiliateCode'],
+                'customerGroup' => $order['orderCustomer']['customer']['group']['name'],
+                'customerOrigin' => '', // TODO: save referrer and read it
+                'salesChannel' => $order['salesChannel']['name'], // TODO: change url to text in schema
+                'language' => $order['language']['name'],
+                'voucherNumber' => null, // TODO: voucher
+                'voucherAmount' => .0, // TODO: voucher
+                'paymentMethod' => $order['transactions'][0]['paymentMethod']['name'],
+                'orderNumber' => $order['orderNumber'],
+                'totalAmountNet' => $order['amountNet'],
+                'totalAmountGross' => $order['amountTotal'],
+                'orderTime' => \date_create($order['orderDate'])->format('YmdHis'),
+            ];
         }
-
-
-
-        return Response::json([
-            'statusCode' => $response->json()
-        ]);
     }
 }

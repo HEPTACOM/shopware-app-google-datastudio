@@ -18,7 +18,17 @@
         <registrationUrl>{{ route('api.v1.shopware6.register') }}</registrationUrl>
     </setup>
     <permissions>
+        <read>country</read>
+        <read>customer</read>
+        <read>customer_group</read>
+        <read>language</read>
         <read>order</read>
+        <read>order_address</read>
+        <read>order_customer</read>
+        <read>order_delivery</read>
+        <read>order_transaction</read>
+        <read>payment_method</read>
+        <read>sales_channel</read>
     </permissions>
     <admin>
         <module
