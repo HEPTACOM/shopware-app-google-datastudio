@@ -163,7 +163,7 @@ class Shopware6Controller extends Controller
                 'customerAffiliate' => $order['orderCustomer']['customer']['affiliateCode'],
                 'customerGroup' => $order['orderCustomer']['customer']['group']['name'],
                 'customerOrigin' => '', // TODO: save referrer and read it
-                'salesChannel' => $order['salesChannel']['name'], // TODO: change url to text in schema
+                'salesChannel' => $order['salesChannel']['name'],
                 'language' => $order['language']['name'],
                 'voucherNumber' => null, // TODO: voucher
                 'voucherAmount' => .0, // TODO: voucher
