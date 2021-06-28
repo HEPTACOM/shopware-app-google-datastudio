@@ -68,6 +68,24 @@ class Shopware6Controller extends Controller
         return Response::noContent(BaseResponse::HTTP_BAD_REQUEST);
     }
 
+    public function wizard(Request $request)
+    {
+        $shopId = $request->get('shop-id');
+        $shopUrl = $request->get('shop-url');
+
+        $shop = Shop::where('shop_id', $shopId)
+            ->where('shop_url', $shopUrl)
+            ->whereNotNull('api_key')
+            ->whereNotNull('secret_key')
+            ->first();
+
+        return Response::view('integration.shopware-6.wizard', [
+            'shop' => $shop,
+        ])->withHeaders([
+            'Content-Security-Policy' => 'frame-ancestors ' . $request->query('shop-url') . '/',
+        ]);
+    }
+
     protected function getAppName(): string
     {
         return (string) \config('heptaconnect-shopware-six.app_name', 'HeptacomHeptaconnectCloudDataAnalysis');
