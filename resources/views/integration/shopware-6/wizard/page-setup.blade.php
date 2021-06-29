@@ -2,7 +2,10 @@
     @markdown(trans('shopware-6/wizard.pages.setup.connect'))
 
     <div style="text-align: center; margin: 30px 0">
-        <a class="sw-button sw-button--primary" href="#">
+        <a class="sw-button sw-button--primary"
+           href="{{ config('heptaconnect-shopware-six.google_apps_script_deployment_url') }}"
+           target="_blank"
+        >
             <span class="sw-button__content">
                 {{ trans('shopware-6/wizard.navigation.route.google-data-studio') }}
             </span>
