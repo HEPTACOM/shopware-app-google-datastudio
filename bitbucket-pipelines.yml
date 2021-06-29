@@ -16,7 +16,7 @@ definitions:
                 caches:
                     - composer
                 artifacts:
-                    - 'artifacts/build'
+                    - 'artifacts/build/**'
                 script:
                     - mkdir -p artifacts/build
                     - git archive ${BITBUCKET_COMMIT} | tar -x -C artifacts/build
