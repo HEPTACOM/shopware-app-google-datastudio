@@ -19,28 +19,28 @@ RAW,
             'content' => <<<'RAW'
 Dies Daten werden auf unseren Servern verarbeitet und zusammengefasst an Google Data Studio übermittelt:
 
-Versandkosten
-Versand PLZ
-Versandland
-Rechnung PLZ
-Rechnungsland
-Kundennummer
-Kundenaffiliate
-Kundengruppe
-Kundenherkunft (referrer)
-Produktnummer
-Produktpreis
-Produktanzahl
-Produkthersteller
-Subshop/Verkaufskanal
-Sprache
-Gutscheinnummer
-Gutscheinwert
-Bezahlmethode
-Versandmethode
-Bestellnummer
-Bestellwert
-Bestellzeitpunkt
+- Versandkosten
+- Versand PLZ
+- Versandland
+- Rechnung PLZ
+- Rechnungsland
+- Kundennummer
+- Kundenaffiliate
+- Kundengruppe
+- Kundenherkunft (referrer)
+- Produktnummer
+- Produktpreis
+- Produktanzahl
+- Produkthersteller
+- Subshop/Verkaufskanal
+- Sprache
+- Gutscheinnummer
+- Gutscheinwert
+- Bezahlmethode
+- Versandmethode
+- Bestellnummer
+- Bestellwert
+- Bestellzeitpunkt
 
 In Folgeversionen kann du einzelne Daten von der Übertragung ausschließen.
 RAW,

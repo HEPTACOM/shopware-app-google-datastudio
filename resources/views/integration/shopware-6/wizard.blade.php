@@ -41,6 +41,17 @@
         white-space: pre-wrap;
     }
 
+    footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .wizard-page.wizard-page--data-config ul {
+        padding-left: 20px;
+        margin: 20px 0;
+    }
+
     .sw-card__content.wizard-page-selected--intro .wizard-page.wizard-page--intro {
         display: block;
     }
