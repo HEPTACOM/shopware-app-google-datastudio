@@ -20,8 +20,7 @@ definitions:
                 script:
                     - mkdir -p artifacts/build
                     - git archive ${BITBUCKET_COMMIT} | tar -x -C artifacts/build
-                    - composer install --working-dir=artifacts/build --no-interaction -vv
-                    - composer run --working-dir=artifacts/build --no-interaction -vv -- apply-patches
+                    - composer install --working-dir=artifacts/build --no-dev --no-interaction -vv
 
 pipelines:
     default:
