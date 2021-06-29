@@ -1,0 +1,47 @@
+image: heptacom/shopware-5-pipeline:php74-latest
+
+definitions:
+    steps:
+        -   step: &default
+                clone:
+                    depth: 1
+        -   step: &secret-lint
+                <<: *default
+                name: Security Scan
+                script:
+                    -   pipe: atlassian/git-secrets-scan:0.4.3
+        -   step: &build
+                <<: *default
+                name: Build
+                caches:
+                    - composer
+                artifacts:
+                    - 'artifacts/build'
+                script:
+                    - mkdir -p artifacts/build
+                    - git archive ${BITBUCKET_COMMIT} | tar -x -C artifacts/build
+                    - composer install --working-dir=artifacts/build --no-interaction -vv
+                    - composer run --working-dir=artifacts/build --no-interaction -vv -- apply-patches
+
+pipelines:
+    default:
+        -   step: *secret-lint
+    tags:
+        release/*:
+            -   step: *secret-lint
+            -   step: *build
+            -   step:
+                    name: Upload
+                    clone:
+                        enabled: false
+                    deployment: production
+                    trigger: manual
+                    script:
+                        - rsync -avz -e ssh artifacts/build/ ${SSH_USER}@${SSH_SERVER}:${SSH_DIRECTORY}
+                        -   pipe: atlassian/ssh-run:0.2.2
+                            variables:
+                                SSH_USER: $SSH_USER
+                                SERVER: $SSH_SERVER
+                                COMMAND: 'source .profile;
+                                    $SSH_DIRECTORY/artisan migrate;
+                                    $SSH_DIRECTORY/artisan config:cache;'
