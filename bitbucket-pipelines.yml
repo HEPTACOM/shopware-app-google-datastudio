@@ -21,6 +21,7 @@ definitions:
                     - mkdir -p artifacts/build
                     - git archive ${BITBUCKET_COMMIT} | tar -x -C artifacts/build
                     - composer install --working-dir=artifacts/build --no-dev --no-interaction -vv
+                    - artifacts/build/artisan app:download-shopware-administration-style
 
 pipelines:
     default:
@@ -43,4 +44,5 @@ pipelines:
                                 SERVER: $SSH_SERVER
                                 COMMAND: 'source .profile;
                                     $SSH_DIRECTORY/artisan migrate;
+                                    $SSH_DIRECTORY/artisan storage:link --force;
                                     $SSH_DIRECTORY/artisan config:cache;'
