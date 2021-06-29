@@ -5,13 +5,14 @@
 >
     <meta>
         <name>{{ config('heptaconnect-shopware-six.app_name') }}</name>
+        <icon>https://www.heptacom.de/resources/static/google-datastudio-logo-heptaconnect.png</icon>
         <label>HEPTAconnect Cloud | Goolge Data Studio</label>
         <label lang="de-DE">HEPTAconnect Cloud | Goolge Data Studio</label>
         <description>HEPTAconnect Cloud connects Shopware 6 with Google Data Studio and enables you to have interactive dashboards and clear reports and to connect many other data sources.</description>
         <description lang="de-DE">HEPTAconnect Cloud verbindet Shopware 6 mit Google Data Studio und ermöglichen dir so interaktive Dashboards und übersichtliche Reports und das Verbinden vieler weiterer Datenquellen.</description>
         <author>HEPTACOM GmbH</author>
         <copyright>(c) by HEPTACOM GmbH</copyright>
-        <version>0.1.0</version>
+        <version>0.2.0</version>
         <license>proprietary</license>
     </meta>
     <setup>
