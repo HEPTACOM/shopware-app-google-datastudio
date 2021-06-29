@@ -11,6 +11,11 @@ class ConfigClient
 {
     use CreateClientTrait;
 
+    public function __construct()
+    {
+        $this->createHttpClient();
+    }
+
     public function getShopwareVersion(Context $context): ?string
     {
         return $this->decodeResponse($this->getHttpClient()->get($context->apiEndpoint . '/api/_info/config', [
