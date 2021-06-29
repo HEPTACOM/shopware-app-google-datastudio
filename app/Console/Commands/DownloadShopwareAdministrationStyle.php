@@ -35,7 +35,7 @@ class DownloadShopwareAdministrationStyle extends Command
                 }
 
                 $this->untar($tarFile, $tagDir);
-                \rename($tagDir . '/Resources/public/static', $outDir);
+                $this->mv($tagDir . '/Resources/public/static', $outDir);
             }
         }
     }
@@ -59,6 +59,16 @@ class DownloadShopwareAdministrationStyle extends Command
     protected function untar(string $file, string $outputDirectory): void
     {
         $process = new Process(['tar', '-xf', $file], $outputDirectory);
+        $process->start();
+        $process->wait();
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/function.rename.php#117590
+     */
+    protected function mv(string $from, string $to): void
+    {
+        $process = new Process(['mv', $from, $to]);
         $process->start();
         $process->wait();
     }
