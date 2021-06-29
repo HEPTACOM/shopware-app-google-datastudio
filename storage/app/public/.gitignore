@@ -1,2 +1,13 @@
 *
 !.gitignore
+
+# https://stackoverflow.com/a/5534865/
+!shopware-admin/
+shopware-admin/*
+!shopware-admin/v6.4.0.0/
+shopware-admin/v6.4.0.0/*
+!shopware-admin/v6.4.0.0/static/
+shopware-admin/v6.4.0.0/static/*
+!shopware-admin/v6.4.0.0/static/css/
+shopware-admin/v6.4.0.0/static/css/*
+!shopware-admin/v6.4.0.0/static/css/app.css
