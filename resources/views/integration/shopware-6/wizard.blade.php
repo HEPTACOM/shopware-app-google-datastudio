@@ -23,10 +23,10 @@
     </div>
 </div>
 
-@if (file_exists(public_path('storage/shopware-admin/v'.$swVersion.'/css/app.css')))
-    <link rel="stylesheet" href="/storage/shopware-admin/v{{ $swVersion }}/css/app.css">
-@elseif (file_exists(public_path('storage/shopware-admin/v6.4.0.0/css/app.css')))
-    <link rel="stylesheet" href="/storage/shopware-admin/v6.4.0.0/css/app.css">
+@if (file_exists(public_path('storage/shopware-admin/v'.$swVersion.'/static/css/app.css')))
+    <link rel="stylesheet" href="/storage/shopware-admin/v{{ $swVersion }}/static/css/app.css">
+@elseif (file_exists(public_path('storage/shopware-admin/v6.4.0.0/static/css/app.css')))
+    <link rel="stylesheet" href="/storage/shopware-admin/v6.4.0.0/static/css/app.css">
 @else
     <link rel="stylesheet" href="{{ request('shop-url') }}/bundles/administration/static/css/app.css?{{ request('timestamp') }}">
 @endif
