@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Shopware6\ConfigClient;
 use App\Models\EntityRepository;
 use App\Models\Shopware6\Shop;
 use Illuminate\Http\Request;
@@ -80,15 +81,22 @@ class Shopware6Controller extends Controller
     {
         $shopId = $request->get('shop-id');
         $shopUrl = $request->get('shop-url');
-
+        /** @var Shop|null $shop */
         $shop = Shop::where('shop_id', $shopId)
             ->where('shop_url', $shopUrl)
             ->whereNotNull('api_key')
             ->whereNotNull('secret_key')
             ->first();
 
+        $shopVersion = (string) $request->get('sw-version');
+
+        if ($shopVersion === '') {
+            $shopVersion = (new ConfigClient())->getShopwareVersion($this->getContextFromShop($shop));
+        }
+
         return Response::view('integration.shopware-6.wizard', [
             'shop' => $shop,
+            'swVersion' => $shopVersion,
         ])->withHeaders([
             'Content-Security-Policy' => 'frame-ancestors ' . $request->query('shop-url') . '/',
         ]);
@@ -104,20 +112,11 @@ class Shopware6Controller extends Controller
         return (string) \config('heptaconnect-shopware-six.app_secret', 'mysecret');
     }
 
-    public function order(Shop $shop,Request $request): BaseResponse
+    public function order(Shop $shop, Request $request): BaseResponse
     {
-        $apiKey = $shop->api_key;
-        $secretKey = $shop->secret_key;
-        $shopUrl = $shop->shop_url;
-
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
-
-        $grantType = new ClientCredentialsGrantType($apiKey, $secretKey);
-
-        $adminClient = new AdminAuthenticator($grantType, $shopUrl);
-        $accessToken = $adminClient->fetchAccessToken();
-        $context = new Context($shopUrl, $accessToken);
+        $context = $this->getContextFromShop($shop);
 
         return Response::json(
             iterable_to_array($this->getOrders($startDate, $endDate, $context))
@@ -174,5 +173,23 @@ class Shopware6Controller extends Controller
                 'orderTime' => \date_create($order['orderDate'])->format('YmdHis'),
             ];
         }
+    }
+
+    /**
+     * @param Shop $shop
+     * @return Context
+     * @throws \Vin\ShopwareSdk\Exception\AuthorizationFailedException
+     */
+    private function getContextFromShop(Shop $shop): Context
+    {
+        $apiKey = $shop->api_key;
+        $secretKey = $shop->secret_key;
+        $shopUrl = $shop->shop_url;
+        $grantType = new ClientCredentialsGrantType($apiKey, $secretKey);
+
+        $adminClient = new AdminAuthenticator($grantType, $shopUrl);
+        $accessToken = $adminClient->fetchAccessToken();
+        $context = new Context($shopUrl, $accessToken);
+        return $context;
     }
 }
