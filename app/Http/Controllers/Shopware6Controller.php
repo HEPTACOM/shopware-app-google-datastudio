@@ -104,20 +104,11 @@ class Shopware6Controller extends Controller
         return (string) \config('heptaconnect-shopware-six.app_secret', 'mysecret');
     }
 
-    public function order(Shop $shop,Request $request): BaseResponse
+    public function order(Shop $shop, Request $request): BaseResponse
     {
-        $apiKey = $shop->api_key;
-        $secretKey = $shop->secret_key;
-        $shopUrl = $shop->shop_url;
-
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
-
-        $grantType = new ClientCredentialsGrantType($apiKey, $secretKey);
-
-        $adminClient = new AdminAuthenticator($grantType, $shopUrl);
-        $accessToken = $adminClient->fetchAccessToken();
-        $context = new Context($shopUrl, $accessToken);
+        $context = $this->getContextFromShop($shop);
 
         return Response::json(
             iterable_to_array($this->getOrders($startDate, $endDate, $context))
@@ -174,5 +165,23 @@ class Shopware6Controller extends Controller
                 'orderTime' => \date_create($order['orderDate'])->format('YmdHis'),
             ];
         }
+    }
+
+    /**
+     * @param Shop $shop
+     * @return Context
+     * @throws \Vin\ShopwareSdk\Exception\AuthorizationFailedException
+     */
+    private function getContextFromShop(Shop $shop): Context
+    {
+        $apiKey = $shop->api_key;
+        $secretKey = $shop->secret_key;
+        $shopUrl = $shop->shop_url;
+        $grantType = new ClientCredentialsGrantType($apiKey, $secretKey);
+
+        $adminClient = new AdminAuthenticator($grantType, $shopUrl);
+        $accessToken = $adminClient->fetchAccessToken();
+        $context = new Context($shopUrl, $accessToken);
+        return $context;
     }
 }
