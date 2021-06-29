@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Shopware6\ConfigClient;
 use App\Models\EntityRepository;
 use App\Models\Shopware6\Shop;
 use Illuminate\Http\Request;
@@ -80,15 +81,22 @@ class Shopware6Controller extends Controller
     {
         $shopId = $request->get('shop-id');
         $shopUrl = $request->get('shop-url');
-
+        /** @var Shop|null $shop */
         $shop = Shop::where('shop_id', $shopId)
             ->where('shop_url', $shopUrl)
             ->whereNotNull('api_key')
             ->whereNotNull('secret_key')
             ->first();
 
+        $shopVersion = (string) $request->get('sw-version');
+
+        if ($shopVersion === '') {
+            $shopVersion = (new ConfigClient())->getShopwareVersion($this->getContextFromShop($shop));
+        }
+
         return Response::view('integration.shopware-6.wizard', [
             'shop' => $shop,
+            'swVersion' => $shopVersion,
         ])->withHeaders([
             'Content-Security-Policy' => 'frame-ancestors ' . $request->query('shop-url') . '/',
         ]);
