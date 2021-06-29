@@ -36,7 +36,7 @@ pipelines:
                     deployment: production
                     trigger: manual
                     script:
-                        - rsync -avz -e ssh artifacts/build/ ${SSH_USER}@${SSH_SERVER}:${SSH_DIRECTORY}
+                        - rsync -avz -O -e ssh artifacts/build/ ${SSH_USER}@${SSH_SERVER}:${SSH_DIRECTORY}
                         -   pipe: atlassian/ssh-run:0.2.2
                             variables:
                                 SSH_USER: $SSH_USER
