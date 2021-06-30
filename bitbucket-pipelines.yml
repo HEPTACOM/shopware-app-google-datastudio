@@ -22,6 +22,7 @@ definitions:
                     - git archive ${BITBUCKET_COMMIT} | tar -x -C artifacts/build
                     - composer install --working-dir=artifacts/build --no-dev --no-interaction -vv
                     - artifacts/build/artisan app:download-shopware-administration-style
+                    - artifacts/build/artisan app:build
 
 pipelines:
     default:
