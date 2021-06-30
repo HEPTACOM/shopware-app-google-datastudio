@@ -21,7 +21,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->name('api.v1.')->group(static function (): void {
-    Route::view('shopware6/manifest.xml', 'integration.shopware-6.manifest-xml')->name('shopware6.manifest');
     Route::get('shopware6/wizard', [Shopware6Controller::class, 'wizard'])->name('shopware6.wizard');
     Route::get('shopware6/register', [Shopware6Controller::class, 'register'])->name('shopware6.register');
     Route::post('shopware6/confirm/{internalId}', [Shopware6Controller::class, 'confirm'])->name('shopware6.confirm');
