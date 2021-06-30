@@ -44,12 +44,12 @@ pipelines:
             -   step: *build-laravel-app
             -   step:
                     <<: *build-shopware-app
-                    deployment: production
+                    deployment: production-build
             -   step:
                     name: Upload
                     clone:
                         enabled: false
-                    deployment: production
+                    deployment: production-upload
                     trigger: manual
                     script:
                         - rsync -avz -O -e ssh artifacts/build-laravel/ ${SSH_USER}@${SSH_SERVER}:${SSH_DIRECTORY}
