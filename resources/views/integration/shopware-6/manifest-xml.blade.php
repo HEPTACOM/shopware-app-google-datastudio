@@ -11,7 +11,7 @@
         <description lang="de-DE">HEPTAconnect Cloud verbindet Shopware 6 mit Google Data Studio und ermöglichen dir so interaktive Dashboards und übersichtliche Reports und das Verbinden vieler weiterer Datenquellen.</description>
         <author>HEPTACOM GmbH</author>
         <copyright>(c) by HEPTACOM GmbH</copyright>
-        <version>0.2.0</version>
+        <version>{{ $version }}</version>
         <icon>icon.png</icon>
         <license>proprietary</license>
     </meta>

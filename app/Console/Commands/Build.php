@@ -15,6 +15,8 @@ class Build extends Command
     public function handle()
     {
         $prefix = config('heptaconnect-shopware-six.app_name');
+        $tag = \trim((string) `git describe --tags --abbrev=0 --match='release/*'`);
+        $version = \substr($tag, \strlen('release/'));
 
         $buildDisk = Storage::build([
             'driver' => 'local',
@@ -29,7 +31,7 @@ class Build extends Command
         $buildDisk->deleteDirectory($prefix);
         $buildDisk->put(
             $prefix . '/manifest.xml',
-            View::make('integration.shopware-6.manifest-xml')->render()
+            View::make('integration.shopware-6.manifest-xml', ['version' => $version])->render()
         );
         $buildDisk->put(
             $prefix . '/icon.png',
