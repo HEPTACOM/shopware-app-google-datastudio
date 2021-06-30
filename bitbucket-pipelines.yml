@@ -10,19 +10,30 @@ definitions:
                 name: Security Scan
                 script:
                     -   pipe: atlassian/git-secrets-scan:0.4.3
-        -   step: &build
+        -   step: &build-laravel-app
                 <<: *default
-                name: Build
+                name: Build Laravel App
                 caches:
                     - composer
                 artifacts:
-                    - 'artifacts/build/**'
+                    - 'artifacts/build-laravel/**'
                 script:
-                    - mkdir -p artifacts/build
-                    - git archive ${BITBUCKET_COMMIT} | tar -x -C artifacts/build
-                    - composer install --working-dir=artifacts/build --no-dev --no-interaction -vv
-                    - artifacts/build/artisan app:download-shopware-administration-style
-                    - artifacts/build/artisan app:build
+                    - mkdir -p artifacts/build-laravel
+                    - git archive ${BITBUCKET_COMMIT} | tar -x -C artifacts/build-laravel
+                    - composer install --working-dir=artifacts/build-laravel --no-dev --no-interaction -vv
+                    - artifacts/build-laravel/artisan app:download-shopware-administration-style
+        -   step: &build-shopware-app
+                <<: *default
+                name: Build Shopware App
+                clone:
+                    enabled: false
+                artifacts:
+                    - 'artifacts/build-shopware/HeptacomHeptaconnectCloudDataAnalysis.zip'
+                script:
+                    - mkdir -p artifacts/build-shopware
+                    - APP_URL=$APP_URL SHOPWARE_SIX_APP_SECRET=$SHOPWARE_SIX_APP_SECRET artifacts/build-laravel/artisan app:build
+                    - cd artifacts/build-laravel/storage/app/build; zip -r HeptacomHeptaconnectCloudDataAnalysis.zip HeptacomHeptaconnectCloudDataAnalysis/*
+                    - mv artifacts/build-laravel/storage/app/build/HeptacomHeptaconnectCloudDataAnalysis.zip artifacts/build-shopware/HeptacomHeptaconnectCloudDataAnalysis.zip
 
 pipelines:
     default:
@@ -30,7 +41,10 @@ pipelines:
     tags:
         release/*:
             -   step: *secret-lint
-            -   step: *build
+            -   step: *build-laravel-app
+            -   step:
+                    <<: *build-shopware-app
+                    deployment: production
             -   step:
                     name: Upload
                     clone:
@@ -38,7 +52,7 @@ pipelines:
                     deployment: production
                     trigger: manual
                     script:
-                        - rsync -avz -O -e ssh artifacts/build/ ${SSH_USER}@${SSH_SERVER}:${SSH_DIRECTORY}
+                        - rsync -avz -O -e ssh artifacts/build-laravel/ ${SSH_USER}@${SSH_SERVER}:${SSH_DIRECTORY}
                         -   pipe: atlassian/ssh-run:0.2.2
                             variables:
                                 SSH_USER: $SSH_USER
