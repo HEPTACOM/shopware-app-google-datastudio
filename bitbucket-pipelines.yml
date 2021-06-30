@@ -31,7 +31,7 @@ definitions:
                     - 'artifacts/build-shopware/HeptacomHeptaconnectCloudDataAnalysis.zip'
                 script:
                     - mkdir -p artifacts/build-shopware
-                    - APP_URL=$APP_URL SHOPWARE_SIX_APP_SECRET=$SHOPWARE_SIX_APP_SECRET artifacts/build-laravel/artisan app:build
+                    - artifacts/build-laravel/artisan app:build
                     - cd artifacts/build-laravel/storage/app/build; zip -r HeptacomHeptaconnectCloudDataAnalysis.zip HeptacomHeptaconnectCloudDataAnalysis/*; cd -
                     - mv artifacts/build-laravel/storage/app/build/HeptacomHeptaconnectCloudDataAnalysis.zip artifacts/build-shopware/HeptacomHeptaconnectCloudDataAnalysis.zip
 
