@@ -10,13 +10,17 @@ use Illuminate\Support\Facades\View;
 
 class Build extends Command
 {
-    protected $signature = 'app:build';
+    protected $signature = 'app:build {--version=}';
 
     public function handle()
     {
         $prefix = config('heptaconnect-shopware-six.app_name');
-        $tag = \trim((string) `git describe --tags --abbrev=0 --match='release/*'`);
-        $version = \substr($tag, \strlen('release/'));
+        $version = $this->option('version');
+
+        if (!$version) {
+            $tag = \trim((string) `git describe --tags --abbrev=0 --match='release/*'`);
+            $version = \substr($tag, \strlen('release/'));
+        }
 
         if (!$version) {
             $this->error('Release tag not found!');
