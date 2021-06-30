@@ -18,6 +18,12 @@ class Build extends Command
         $tag = \trim((string) `git describe --tags --abbrev=0 --match='release/*'`);
         $version = \substr($tag, \strlen('release/'));
 
+        if (!$version) {
+            $this->error('Release tag not found!');
+
+            return 1;
+        }
+
         $buildDisk = Storage::build([
             'driver' => 'local',
             'root' => storage_path('app/build'),
