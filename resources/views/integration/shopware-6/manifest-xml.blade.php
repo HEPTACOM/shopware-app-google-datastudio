@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/app-system/0.2.0/src/Core/Content/App/Manifest/Schema/manifest-1.0.xsd"
+    xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/v6.4.0.0/src/Core/Framework/App/Manifest/Schema/manifest-1.0.xsd"
 >
     <meta>
         <name>{{ config('heptaconnect-shopware-six.app_name') }}</name>
