@@ -17,7 +17,9 @@
     </meta>
     <setup>
         <registrationUrl>{{ route('api.v1.shopware6.register') }}</registrationUrl>
-        <secret>{{ config('heptaconnect-shopware-six.app_secret') }}</secret>
+        @if ($isDev)
+            <secret>{{ config('heptaconnect-shopware-six.app_secret') }}</secret>
+        @endif
     </setup>
     <permissions>
         <read>country</read>

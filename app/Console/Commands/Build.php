@@ -10,12 +10,13 @@ use Illuminate\Support\Facades\View;
 
 class Build extends Command
 {
-    protected $signature = 'app:build {--tag=}';
+    protected $signature = 'app:build {--tag=} {--dev}';
 
     public function handle()
     {
         $prefix = config('heptaconnect-shopware-six.app_name');
         $version = $this->option('tag');
+        $isDev = (bool) $this->option('dev');
 
         if (!$version) {
             $tag = \trim((string) `git describe --tags --abbrev=0 --match='release/*'`);
@@ -41,11 +42,16 @@ class Build extends Command
         $buildDisk->deleteDirectory($prefix);
         $buildDisk->put(
             $prefix . '/manifest.xml',
-            View::make('integration.shopware-6.manifest-xml', ['version' => $version])->render()
+            View::make('integration.shopware-6.manifest-xml', [
+                'version' => $version,
+                'isDev' => $isDev,
+            ])->render()
         );
         $buildDisk->put(
             $prefix . '/icon.png',
             $resourcesDisk->get('img/shopware-app-logo-heptaconnect.png')
         );
+
+        return 0;
     }
 }
