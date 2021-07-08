@@ -44,4 +44,7 @@
         </module>
         <main-module source="{{ route('api.v1.shopware6.wizard') }}"/>
     </admin>
+    <webhooks>
+        <webhook name="appLifecycleDeleted" url="{{ route('shopware6.appLifecycle.deleted') }}" event="app.deleted"/>
+    </webhooks>
 </manifest>
