@@ -123,6 +123,41 @@ class Shopware6Controller extends Controller
         );
     }
 
+    public function appLifecycleDeleted(Request $request)
+    {
+        $source = $request->get('source');
+
+        $jsonPayload = \json_encode($request->json()->all());
+        $shopUrl = $source['url'] ?? null;
+        $shopId = $source['shopId'] ?? null;
+        $theirSignature = $request->header('shopware-shop-signature') ?? null;
+
+        if (!\is_string($shopUrl)) {
+            logger('Tried to uninstall Shopware 6 app, but no url was provided.');
+
+            return;
+        }
+
+        if (!\is_string($shopId)) {
+            logger('Tried to uninstall Shopware 6 app, but no shop-id was provided.');
+
+            return;
+        }
+
+        $builder = Shop::where('shop_id', $shopId);
+
+        /** @var Shop $shop */
+        foreach ($builder->getModels() as $shop) {
+            $ourSignature = hash_hmac('sha256', $jsonPayload, $shop->shop_secret);
+
+            if ($theirSignature === $ourSignature) {
+                $builder->delete();
+
+                return;
+            }
+        }
+    }
+
     protected function getOrders($startDate, $endDate, Context $context): iterable
     {
         /** @var BaseEntityRepository $repository */
