@@ -7,7 +7,9 @@ namespace App\Http\Controllers;
 use App\Http\Shopware6\ConfigClient;
 use App\Models\EntityRepository;
 use App\Models\Shopware6\Shop;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as BaseResponse;
@@ -116,11 +118,40 @@ class Shopware6Controller extends Controller
     {
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
-        $context = $this->getContextFromShop($shop);
 
-        return Response::json(
-            iterable_to_array($this->getOrders($startDate, $endDate, $context))
-        );
+        $lockKey = join('_', [
+            'lock',
+            $shop->shop_id,
+            $startDate,
+            $endDate,
+        ]);
+
+        $lock = Cache::lock($lockKey);
+        $ttl = 60;
+
+        try {
+            $orders = $lock->block($ttl, function () use ($shop, $startDate, $endDate, $ttl) {
+                $cacheKey = join('_', [
+                    'cache',
+                    $shop->shop_id,
+                    $startDate,
+                    $endDate,
+                ]);
+
+                if (!Cache::has($cacheKey)) {
+                    $context = $this->getContextFromShop($shop);
+                    $orders = iterable_to_array($this->getOrders($startDate, $endDate, $context));
+
+                    Cache::put($cacheKey, $orders, $ttl);
+                }
+
+                return Cache::get($cacheKey);
+            });
+
+            return Response::json($orders);
+        } catch (LockTimeoutException $exception) {
+            return Response::json([], 423);
+        }
     }
 
     public function appLifecycleDeleted(Request $request)
