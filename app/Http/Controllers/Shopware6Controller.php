@@ -98,7 +98,7 @@ class Shopware6Controller extends Controller
             'shop' => $shop,
             'swVersion' => $shopVersion,
         ])->withHeaders([
-            'Content-Security-Policy' => 'frame-ancestors ' . $request->query('shop-url') . '/',
+            'Content-Security-Policy' => 'frame-ancestors ' . \rtrim((string) $request->query('shop-url'), '/') . '/',
         ]);
     }
 
@@ -219,7 +219,7 @@ class Shopware6Controller extends Controller
     {
         $apiKey = $shop->api_key;
         $secretKey = $shop->secret_key;
-        $shopUrl = $shop->shop_url;
+        $shopUrl = \rtrim((string) $shop->shop_url, '/');
         $grantType = new ClientCredentialsGrantType($apiKey, $secretKey);
 
         $adminClient = new AdminAuthenticator($grantType, $shopUrl);
