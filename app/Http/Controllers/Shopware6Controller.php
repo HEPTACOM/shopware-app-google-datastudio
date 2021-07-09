@@ -189,8 +189,8 @@ class Shopware6Controller extends Controller
             yield [
                 'shippingCostsNet' => $order['shippingCosts']['totalPrice'], // TODO: tax
                 'shippingCostsGross' => $order['shippingCosts']['totalPrice'], // TODO: tax
-                'shippingCity' => $order['deliveries'][0]['shippingOrderAddress']['city'],
-                'shippingCountry' => $order['deliveries'][0]['shippingOrderAddress']['country']['iso'],
+                'shippingCity' => $order['deliveries'][0]['shippingOrderAddress']['city'] ?? null,
+                'shippingCountry' => $order['deliveries'][0]['shippingOrderAddress']['country']['iso'] ?? null,
                 'billingCity' => $order['billingAddress']['city'],
                 'billingCountry' => $order['billingAddress']['country']['iso'],
                 'customerNumber' => $order['orderCustomer']['customerNumber'],
