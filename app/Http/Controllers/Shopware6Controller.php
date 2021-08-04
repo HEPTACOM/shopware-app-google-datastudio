@@ -99,8 +99,6 @@ class Shopware6Controller extends Controller
         return Response::view('integration.shopware-6.wizard', [
             'shop' => $shop,
             'swVersion' => $shopVersion,
-        ])->withHeaders([
-            'Content-Security-Policy' => 'frame-ancestors ' . \rtrim((string) $request->query('shop-url'), '/') . '/',
         ]);
     }
 
