@@ -2,16 +2,15 @@ image: heptacom/shopware-5-pipeline:php74-latest
 
 definitions:
     steps:
-        -   step: &default
+        -   step: &secret-lint
                 clone:
                     depth: 1
-        -   step: &secret-lint
-                <<: *default
                 name: Security Scan
                 script:
                     -   pipe: atlassian/git-secrets-scan:0.4.3
         -   step: &build-laravel-app
-                <<: *default
+                clone:
+                    depth: 1
                 name: Build Laravel App
                 caches:
                     - composer
@@ -23,7 +22,6 @@ definitions:
                     - composer install --working-dir=artifacts/build-laravel --no-dev --no-interaction -vv
                     - artifacts/build-laravel/artisan app:download-shopware-administration-style
         -   step: &build-shopware-app
-                <<: *default
                 name: Build Shopware App
                 artifacts:
                     - 'artifacts/build-shopware/HeptacomHeptaconnectCloudDataAnalysis.zip'
