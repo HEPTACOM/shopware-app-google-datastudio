@@ -2,7 +2,10 @@
     @markdown(trans('shopware-6/wizard.pages.finish.content'))
 
     <div style="text-align: center; margin: 30px 0">
-        <a class="sw-button sw-button--primary" href="https://www.youtube.com/watch?v=l_PRUmmXQZE">
+        <a class="sw-button sw-button--primary"
+           href="https://www.youtube.com/watch?v=l_PRUmmXQZE"
+           rel="noopener"
+        >
             <span class="sw-button__content">
                 {{ trans('shopware-6/wizard.navigation.route.youtube') }}
             </span>
