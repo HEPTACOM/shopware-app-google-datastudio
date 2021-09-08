@@ -4,6 +4,7 @@
     <div style="text-align: center; margin: 30px 0">
         <a class="sw-button sw-button--primary"
            href="https://www.youtube.com/watch?v=l_PRUmmXQZE"
+           target="_blank"
            rel="noopener"
         >
             <span class="sw-button__content">
