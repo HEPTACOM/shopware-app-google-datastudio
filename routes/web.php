@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/party.json', static function () {
     // 'connectionId' => 'f405cb65-d589-4c65-bb81-b59d6ff0174d',
     // 'startDate' => '2021-04-01',
