@@ -215,26 +215,32 @@ class Shopware6Controller extends Controller
 
         /** @var array $order */
         foreach ($orders as $order) {
+            $dateTime = \date_create($order['orderDate']);
+
+            if ($dateTime === false) {
+                $dateTime = null;
+            }
+
             yield [
-                'shippingCostsNet' => $order['shippingCosts']['totalPrice'], // TODO: tax
-                'shippingCostsGross' => $order['shippingCosts']['totalPrice'], // TODO: tax
+                'shippingCostsNet' => $order['shippingCosts']['totalPrice'] ?? null, // TODO: tax
+                'shippingCostsGross' => $order['shippingCosts']['totalPrice'] ?? null, // TODO: tax
                 'shippingCity' => $order['deliveries'][0]['shippingOrderAddress']['city'] ?? null,
                 'shippingCountry' => $order['deliveries'][0]['shippingOrderAddress']['country']['iso'] ?? null,
-                'billingCity' => $order['billingAddress']['city'],
-                'billingCountry' => $order['billingAddress']['country']['iso'],
-                'customerNumber' => $order['orderCustomer']['customerNumber'],
-                'customerAffiliate' => $order['orderCustomer']['customer']['affiliateCode'],
-                'customerGroup' => $order['orderCustomer']['customer']['group']['name'],
+                'billingCity' => $order['billingAddress']['city'] ?? null,
+                'billingCountry' => $order['billingAddress']['country']['iso'] ?? null,
+                'customerNumber' => $order['orderCustomer']['customerNumber'] ?? null,
+                'customerAffiliate' => ($order['orderCustomer']['customer'] ?? [])['affiliateCode'] ?? null,
+                'customerGroup' => $order['orderCustomer']['customer']['group']['name'] ?? null,
                 'customerOrigin' => '', // TODO: save referrer and read it
-                'salesChannel' => $order['salesChannel']['name'],
-                'language' => $order['language']['name'],
+                'salesChannel' => $order['salesChannel']['name'] ?? null,
+                'language' => $order['language']['name'] ?? null,
                 'voucherNumber' => null, // TODO: voucher
                 'voucherAmount' => .0, // TODO: voucher
-                'paymentMethod' => $order['transactions'][0]['paymentMethod']['name'],
-                'orderNumber' => $order['orderNumber'],
-                'totalAmountNet' => $order['amountNet'],
-                'totalAmountGross' => $order['amountTotal'],
-                'orderTime' => \date_create($order['orderDate'])->format('YmdHis'),
+                'paymentMethod' => $order['transactions'][0]['paymentMethod']['name'] ?? null,
+                'orderNumber' => $order['orderNumber'] ?? null,
+                'totalAmountNet' => $order['amountNet'] ?? null,
+                'totalAmountGross' => $order['amountTotal'] ?? null,
+                'orderTime' => $dateTime ? $dateTime->format('YmdHis') : null,
             ];
         }
     }
