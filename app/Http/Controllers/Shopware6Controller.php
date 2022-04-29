@@ -18,6 +18,7 @@ use Vin\ShopwareSdk\Client\GrantType\ClientCredentialsGrantType;
 use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Criteria;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderDefinition;
+use Vin\ShopwareSdk\Data\Filter\EqualsFilter;
 use Vin\ShopwareSdk\Data\Filter\RangeFilter;
 use Vin\ShopwareSdk\Factory\RepositoryFactory;
 use Vin\ShopwareSdk\Repository\EntityRepository as BaseEntityRepository;
@@ -211,7 +212,14 @@ class Shopware6Controller extends Controller
         $criteria->setPage(0);
         $criteria->setLimit(0);
 
-        $orders = $orderRepository->search($criteria, $context)->getData();
+        $criteria_0_0_24 = clone $criteria;
+        $criteria->addFilter(new EqualsFilter('transactions.stateMachineState.technicalName', 'paid'));
+
+        try {
+            $orders = $orderRepository->search($criteria, $context)->getData();
+        } catch (\Throwable $_) {
+            $orders = $orderRepository->search($criteria_0_0_24, $context)->getData();
+        }
 
         /** @var array $order */
         foreach ($orders as $order) {

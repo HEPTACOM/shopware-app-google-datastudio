@@ -33,6 +33,7 @@
         <read>order_transaction</read>
         <read>payment_method</read>
         <read>sales_channel</read>
+        <read>state_machine_state</read>
     </permissions>
     <admin>
         <module
