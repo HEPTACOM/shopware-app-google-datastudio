@@ -33,9 +33,6 @@ class Shopware6Controller extends Controller
         $receivedSignature = (string) $request->header('shopware-app-signature');
         $calculatedSignature = \hash_hmac('sha256', $request->getQueryString(), $this->getAppSecret());
 
-        // TODO verify signatures
-        // TODO verify timestamp
-
         $proof = \hash_hmac('sha256', $shopId . $shopUrl . $this->getAppName(), $this->getAppSecret());
         $shopSecret = Str::uuid()->toString();
 
@@ -60,7 +57,6 @@ class Shopware6Controller extends Controller
         $timestamp = (int) $request->get('timestamp');
         $shopUrl = (string) $request->get('shopUrl');
         $shopId = (string) $request->get('shopId');
-        // TODO verify timestamp
 
         $shop = Shop::where('shop_id', $shopId)
             ->where('shop_url', $shopUrl)
